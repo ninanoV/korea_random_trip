@@ -45,8 +45,8 @@ class SlotSectionWidget extends StatelessWidget {
               ? Colors.blue.shade400
               : _isCurrentStep()
                   ? Colors.orange
-                  : Colors.grey.shade300,
-          width: (_isCurrentStep() || isCompleted) ? 3 : 1,
+                  : Colors.grey.shade300.withValues(alpha: 0.5), // 투명도로 시각적 차이 표현
+          width: 3, // 항상 동일한 테두리 두께 유지
         ),
       ),
       child: Column(
