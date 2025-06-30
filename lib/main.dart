@@ -137,7 +137,8 @@ class _TravelSlotMachineState extends State<TravelSlotMachine> with TickerProvid
         koreaDivisions = jsonData.map((data) => Division.fromJson(data)).toList();
       });
     } catch (e) {
-      print('Error loading Korea divisions: $e');
+      // Error loading Korea divisions data
+      debugPrint('Error loading Korea divisions: $e');
     }
   }
 
@@ -273,7 +274,7 @@ class _TravelSlotMachineState extends State<TravelSlotMachine> with TickerProvid
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.white, Colors.white.withOpacity(0.3)],
+                      colors: [Colors.white, Colors.white.withValues(alpha: 0.3)],
                     ),
                   ),
                 ),
@@ -288,7 +289,7 @@ class _TravelSlotMachineState extends State<TravelSlotMachine> with TickerProvid
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.white.withOpacity(0.3), Colors.white],
+                      colors: [Colors.white.withValues(alpha: 0.3), Colors.white],
                     ),
                   ),
                 ),
@@ -346,9 +347,9 @@ class _TravelSlotMachineState extends State<TravelSlotMachine> with TickerProvid
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Colors.teal.shade300.withOpacity(_backgroundAnimation.value),
-                      Colors.blue.shade400.withOpacity(_backgroundAnimation.value),
-                      Colors.purple.shade300.withOpacity(_backgroundAnimation.value),
+                      Colors.teal.shade300.withValues(alpha: _backgroundAnimation.value),
+                      Colors.blue.shade400.withValues(alpha: _backgroundAnimation.value),
+                      Colors.purple.shade300.withValues(alpha: _backgroundAnimation.value),
                     ],
                   ),
                 ),
@@ -366,7 +367,7 @@ class _TravelSlotMachineState extends State<TravelSlotMachine> with TickerProvid
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                               shadows: [
-                                Shadow(offset: const Offset(2, 2), blurRadius: 4, color: Colors.black.withOpacity(0.5)),
+                                Shadow(offset: const Offset(2, 2), blurRadius: 4, color: Colors.black.withValues(alpha: 0.5)),
                               ],
                             ),
                           ),
@@ -381,11 +382,11 @@ class _TravelSlotMachineState extends State<TravelSlotMachine> with TickerProvid
                           Container(
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withValues(alpha: 0.9),
                               borderRadius: BorderRadius.circular(20),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
+                                  color: Colors.black.withValues(alpha: 0.2),
                                   blurRadius: 10,
                                   offset: const Offset(0, 5),
                                 ),
@@ -443,12 +444,12 @@ class _TravelSlotMachineState extends State<TravelSlotMachine> with TickerProvid
                             Container(
                               padding: const EdgeInsets.all(20),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.95),
+                                color: Colors.white.withValues(alpha: 0.95),
                                 borderRadius: BorderRadius.circular(15),
                                 border: Border.all(color: Colors.amber, width: 3),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.amber.withOpacity(0.3),
+                                    color: Colors.amber.withValues(alpha: 0.3),
                                     blurRadius: 15,
                                     offset: const Offset(0, 5),
                                   ),
@@ -572,7 +573,7 @@ class _TravelSlotMachineState extends State<TravelSlotMachine> with TickerProvid
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: Colors.grey.shade300),
-              boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.2), blurRadius: 5, offset: const Offset(0, 2))],
+              boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.2), blurRadius: 5, offset: const Offset(0, 2))],
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
@@ -635,7 +636,7 @@ class _TravelSlotMachineState extends State<TravelSlotMachine> with TickerProvid
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       child: Container(
-        color: Colors.black.withOpacity(0.7),
+        color: Colors.black.withValues(alpha: 0.7),
         child: Center(
           child: Container(
             margin: const EdgeInsets.all(40),
@@ -643,7 +644,7 @@ class _TravelSlotMachineState extends State<TravelSlotMachine> with TickerProvid
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(25),
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 20, offset: const Offset(0, 10))],
+              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, 10))],
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
