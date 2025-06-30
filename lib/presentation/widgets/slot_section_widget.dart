@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../bloc/slot_machine_notifier.dart';
+import '../notifiers/slot_machine_notifier.dart';
 import 'rolling_slot_widget.dart';
 
 class SlotSectionWidget extends StatelessWidget {

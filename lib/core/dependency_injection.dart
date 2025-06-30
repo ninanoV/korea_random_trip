@@ -3,7 +3,7 @@ import '../data/repositories/division_repository_impl.dart';
 import '../domain/repositories/division_repository.dart';
 import '../domain/usecases/get_korea_divisions.dart';
 import '../domain/usecases/select_random_division.dart';
-import '../presentation/bloc/slot_machine_notifier.dart';
+import '../presentation/notifiers/slot_machine_notifier.dart';
 
 class DependencyInjection {
   static late DivisionRepository _divisionRepository;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../bloc/slot_machine_notifier.dart';
+import '../notifiers/slot_machine_notifier.dart';
 import '../widgets/slot_section_widget.dart';
 import '../widgets/result_popup_widget.dart';
 
