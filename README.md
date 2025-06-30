@@ -54,4 +54,4 @@ flutter run -d chrome
 
 ---
 
-Made with ❤️ using Flutter
+Made with ❤️ using Flutter & Vibe Coding
