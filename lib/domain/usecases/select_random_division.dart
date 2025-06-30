@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import '../entities/division.dart';
 
 class SelectRandomDivision {

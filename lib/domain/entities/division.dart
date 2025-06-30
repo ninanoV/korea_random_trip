@@ -10,9 +10,7 @@ class Division {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is Division &&
-        other.name == name &&
-        other.children == children;
+    return other is Division && other.name == name && other.children == children;
   }
 
   @override

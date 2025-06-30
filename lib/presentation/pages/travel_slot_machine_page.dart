@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+
 import '../notifiers/slot_machine_notifier.dart';
-import '../widgets/slot_section_widget.dart';
 import '../widgets/result_popup_widget.dart';
+import '../widgets/slot_section_widget.dart';
 
 class TravelSlotMachinePage extends StatefulWidget {
   final SlotMachineNotifier notifier;
@@ -15,8 +16,7 @@ class TravelSlotMachinePage extends StatefulWidget {
   State<TravelSlotMachinePage> createState() => _TravelSlotMachinePageState();
 }
 
-class _TravelSlotMachinePageState extends State<TravelSlotMachinePage>
-    with TickerProviderStateMixin {
+class _TravelSlotMachinePageState extends State<TravelSlotMachinePage> with TickerProviderStateMixin {
   // 애니메이션 컨트롤러
   late AnimationController _slotController1;
   late AnimationController _slotController2;
@@ -73,7 +73,7 @@ class _TravelSlotMachinePageState extends State<TravelSlotMachinePage>
 
   void _onStateChanged() {
     final state = widget.notifier.state;
-    
+
     // 애니메이션 트리거
     if (state.isSpinning1) {
       _slotController1.forward(from: 0);
@@ -202,8 +202,8 @@ class _TravelSlotMachinePageState extends State<TravelSlotMachinePage>
         Text(
           '순서대로 스핀하여 여행지를 정해보세요!',
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color: Colors.white70,
-          ),
+                color: Colors.white70,
+              ),
         ),
       ],
     );
@@ -297,17 +297,17 @@ class _TravelSlotMachinePageState extends State<TravelSlotMachinePage>
               Text(
                 '🎉 당신의 여행지 🎉',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.amber.shade700,
-                ),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.amber.shade700,
+                    ),
               ),
               const SizedBox(height: 15),
               Text(
                 '${state.selectedProvince!.name} ${state.selectedCity!.name} ${state.selectedDistrict!.name}',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.teal.shade700,
-                ),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.teal.shade700,
+                    ),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -324,7 +324,7 @@ class _TravelSlotMachinePageState extends State<TravelSlotMachinePage>
       builder: (context, child) {
         final canReset = widget.notifier.canReset;
         final isAnySpinning = widget.notifier.state.isAnySpinning;
-        
+
         return ElevatedButton.icon(
           onPressed: canReset ? widget.notifier.resetAll : null,
           icon: Icon(

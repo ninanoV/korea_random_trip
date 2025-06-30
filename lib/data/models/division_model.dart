@@ -9,10 +9,7 @@ class DivisionModel extends Division {
   factory DivisionModel.fromJson(Map<String, dynamic> json) {
     return DivisionModel(
       name: json['name'] ?? '',
-      children: (json['children'] as List<dynamic>?)
-              ?.map((child) => DivisionModel.fromJson(child))
-              .toList() ??
-          [],
+      children: (json['children'] as List<dynamic>?)?.map((child) => DivisionModel.fromJson(child)).toList() ?? [],
     );
   }
 

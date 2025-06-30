@@ -21,10 +21,30 @@
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="한국 랜덤 여행지 - 슬롯머신으로 여행지를 정해보세요!">
 
-  <!-- 폰트 프리로드 -->
+  <!-- 폰트 프리로드 및 최적화 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Google Fonts CSS 직접 로드로 올바른 URL 보장 -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- 중요한 한글 폰트들을 미리 로드 -->
+  <link rel="preload"
+    href="https://fonts.gstatic.com/s/notosanskr/v36/PbyxFmXiEBPT4ITbgNA5Cgms3VYcOA-vvnqRXjSb0Eg.woff2" as="font"
+    type="font/woff2" crossorigin>
+
+  <style>
+    /* 추가 폰트 최적화 - swap으로 변경하여 폴백 폰트 먼저 표시 */
+    @font-face {
+      font-family: 'Noto Sans KR';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      /* 폴백 폰트 먼저 표시 후 로딩 완료되면 교체 */
+      src: url(https://fonts.gstatic.com/s/notosanskr/v36/PbyxFmXiEBPT4ITbgNA5Cgms3VYcOA-vvnqRXjSb0Eg.woff2) format('woff2');
+      unicode-range: U+AC00-D7A3, U+1100-11FF, U+3130-318F, U+A960-A97F, U+D7B0-D7FF;
+    }
+  </style>
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -39,16 +59,25 @@
   <link rel="manifest" href="manifest.json">
 
   <style>
-    /* 폰트 로딩 중 FOIT 방지 */
+    /* 폰트 로딩 중 폴백 폰트 사용 - 더 부드러운 전환 */
     body {
-      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      font-display: swap;
+      font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', 'Apple SD Gothic Neo', 'Apple Gothic', 'Dotum', '돋움', 'Helvetica Neue', Helvetica, Arial, sans-serif;
       margin: 0;
       padding: 0;
       background-color: #26A69A;
+      /* 한글 텍스트 렌더링 최적화 */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      /* visibility hidden 제거 - 폴백 폰트로 먼저 표시 */
     }
 
-    /* 로딩 스피너 */
+    /* 한글 텍스트 요소들의 기본 스타일 */
+    * {
+      font-family: inherit;
+    }
+
+    /* 로딩 스피너는 항상 표시 */
     .loading-container {
       position: fixed;
       top: 0;
@@ -61,6 +90,7 @@
       justify-content: center;
       align-items: center;
       z-index: 9999;
+      visibility: visible !important;
     }
 
     .loading-text {
@@ -69,6 +99,8 @@
       font-weight: 600;
       margin-bottom: 20px;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      /* 로딩 텍스트는 시스템 폰트 사용 */
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     .spinner {
@@ -107,20 +139,87 @@
   <script src="flutter_bootstrap.js" async></script>
 
   <script>
-    // Flutter 앱이 로드되면 로딩 화면 제거
-    window.addEventListener('flutter-first-frame', function () {
+    let fontsLoaded = false;
+    let flutterLoaded = false;
+    let loadingRemoved = false;
+
+    // 폰트 로딩 상태 확인을 간소화
+    function markFontsAsLoaded() {
+      if (!fontsLoaded) {
+        console.log('Fonts marked as loaded');
+        fontsLoaded = true;
+        checkAndHideLoading();
+      }
+    }
+
+    // Flutter 로딩 상태 확인
+    function markFlutterAsLoaded() {
+      if (!flutterLoaded) {
+        console.log('Flutter marked as loaded');
+        flutterLoaded = true;
+        checkAndHideLoading();
+      }
+    }
+
+    // 여러 방법으로 Flutter 로딩 감지
+    window.addEventListener('flutter-first-frame', markFlutterAsLoaded);
+    window.addEventListener('flutter-initialized', markFlutterAsLoaded);
+
+    // 폰트 로딩 확인
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(markFontsAsLoaded);
+    } else {
+      markFontsAsLoaded();
+    }
+
+    // 로딩 화면 제거 함수
+    function checkAndHideLoading() {
+      console.log('checkAndHideLoading called - fonts:', fontsLoaded, 'flutter:', flutterLoaded, 'removed:', loadingRemoved);
+
+      if ((fontsLoaded && flutterLoaded) && !loadingRemoved) {
+        hideLoadingScreen('Both loaded');
+      }
+    }
+
+    function hideLoadingScreen(reason) {
       const loading = document.getElementById('loading');
-      if (loading) {
+      if (loading && !loadingRemoved) {
+        console.log('Hiding loading screen:', reason);
+        loadingRemoved = true;
         loading.classList.add('fade-out');
         setTimeout(() => {
-          loading.remove();
+          if (loading.parentNode) {
+            loading.remove();
+            console.log('Loading screen removed');
+          }
         }, 500);
       }
+    }
+
+    // 적극적인 폴백 전략
+    // 1초 후 폰트 강제 완료
+    setTimeout(markFontsAsLoaded, 1000);
+
+    // 2초 후 Flutter 강제 완료
+    setTimeout(markFlutterAsLoaded, 2000);
+
+    // 3초 후 무조건 로딩 화면 제거
+    setTimeout(() => {
+      if (!loadingRemoved) {
+        hideLoadingScreen('3s timeout');
+      }
+    }, 3000);
+
+    // DOM 로딩 완료 시에도 시도
+    document.addEventListener('DOMContentLoaded', function () {
+      console.log('DOMContentLoaded fired');
+      setTimeout(markFlutterAsLoaded, 100);
     });
 
-    // 폰트 로딩 완료 확인
-    document.fonts.ready.then(function () {
-      console.log('Fonts loaded');
+    // 페이지 로드 완료 시에도 시도
+    window.addEventListener('load', function () {
+      console.log('Window load event fired');
+      setTimeout(markFlutterAsLoaded, 100);
     });
   </script>
 </body>

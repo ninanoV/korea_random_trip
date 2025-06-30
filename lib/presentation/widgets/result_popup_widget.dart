@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../domain/entities/division.dart';
 
 class ResultPopupWidget extends StatelessWidget {
