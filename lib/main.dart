@@ -367,7 +367,10 @@ class _TravelSlotMachineState extends State<TravelSlotMachine> with TickerProvid
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                               shadows: [
-                                Shadow(offset: const Offset(2, 2), blurRadius: 4, color: Colors.black.withValues(alpha: 0.5)),
+                                Shadow(
+                                    offset: const Offset(2, 2),
+                                    blurRadius: 4,
+                                    color: Colors.black.withValues(alpha: 0.5)),
                               ],
                             ),
                           ),
@@ -460,17 +463,17 @@ class _TravelSlotMachineState extends State<TravelSlotMachine> with TickerProvid
                                   Text(
                                     '🎉 당신의 여행지 🎉',
                                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.amber.shade700,
-                                    ),
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.amber.shade700,
+                                        ),
                                   ),
                                   const SizedBox(height: 15),
                                   Text(
                                     '${selectedProvince!.name} ${selectedCity!.name} ${selectedDistrict!.name}',
                                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.teal.shade700,
-                                    ),
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.teal.shade700,
+                                        ),
                                     textAlign: TextAlign.center,
                                   ),
                                 ],
@@ -523,18 +526,16 @@ class _TravelSlotMachineState extends State<TravelSlotMachine> with TickerProvid
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color:
-            isCompleted
-                ? Colors.blue.shade50
-                : canSpin
+        color: isCompleted
+            ? Colors.blue.shade50
+            : canSpin
                 ? Colors.green.shade50
                 : Colors.grey.shade100,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(
-          color:
-              isCompleted
-                  ? Colors.blue.shade400
-                  : currentStep == stepNumber
+          color: isCompleted
+              ? Colors.blue.shade400
+              : currentStep == stepNumber
                   ? Colors.orange
                   : Colors.grey.shade300,
           width: (currentStep == stepNumber || isCompleted) ? 3 : 1,
@@ -548,14 +549,13 @@ class _TravelSlotMachineState extends State<TravelSlotMachine> with TickerProvid
               Text(
                 title,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color:
-                      isCompleted
+                      fontWeight: FontWeight.bold,
+                      color: isCompleted
                           ? Colors.blue.shade700
                           : canSpin
-                          ? Colors.green.shade700
-                          : Colors.grey.shade600,
-                ),
+                              ? Colors.green.shade700
+                              : Colors.grey.shade600,
+                    ),
               ),
               if (isCompleted) ...[
                 const SizedBox(width: 8),
@@ -573,22 +573,23 @@ class _TravelSlotMachineState extends State<TravelSlotMachine> with TickerProvid
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: Colors.grey.shade300),
-              boxShadow: [BoxShadow(color: Colors.grey.withValues(alpha: 0.2), blurRadius: 5, offset: const Offset(0, 2))],
+              boxShadow: [
+                BoxShadow(color: Colors.grey.withValues(alpha: 0.2), blurRadius: 5, offset: const Offset(0, 2))
+              ],
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Center(
-                child:
-                    isSpinning
-                        ? _buildRollingSlot(stepNumber, animation)
-                        : Text(
-                          value ?? '?',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: value != null ? Colors.teal.shade700 : Colors.grey.shade400,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+                child: isSpinning
+                    ? _buildRollingSlot(stepNumber, animation)
+                    : Text(
+                        value ?? '?',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: value != null ? Colors.teal.shade700 : Colors.grey.shade400,
+                            ),
+                        textAlign: TextAlign.center,
+                      ),
               ),
             ),
           ),
@@ -602,23 +603,22 @@ class _TravelSlotMachineState extends State<TravelSlotMachine> with TickerProvid
               isSpinning
                   ? Icons.hourglass_empty
                   : isCompleted
-                  ? Icons.check
-                  : Icons.casino,
+                      ? Icons.check
+                      : Icons.casino,
               color: Colors.white,
             ),
             label: Text(
               isSpinning
                   ? '스핀 중...'
                   : isCompleted
-                  ? '완료!'
-                  : 'SPIN!',
+                      ? '완료!'
+                      : 'SPIN!',
               style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  isCompleted
-                      ? Colors.blue.shade600
-                      : canSpin
+              backgroundColor: isCompleted
+                  ? Colors.blue.shade600
+                  : canSpin
                       ? Colors.teal.shade600
                       : Colors.grey,
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
@@ -644,7 +644,9 @@ class _TravelSlotMachineState extends State<TravelSlotMachine> with TickerProvid
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(25),
-              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, 10))],
+              boxShadow: [
+                BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, 10))
+              ],
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
