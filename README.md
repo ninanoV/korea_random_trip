@@ -1,6 +1,6 @@
 # 한국 랜덤 여행지 🎰
 
-[![Deploy Flutter Web to GitHub Pages](https://github.com/username/korea_random_trip/actions/workflows/deploy.yml/badge.svg)](https://github.com/username/korea_random_trip/actions/workflows/deploy.yml)
+[![Deploy Flutter Web to GitHub Pages](https://github.com/ninanoV/korea_random_trip/actions/workflows/deploy.yml/badge.svg)](https://github.com/ninanoV/korea_random_trip/actions/workflows/deploy.yml)
 
 Flutter로 제작된 슬롯머신 스타일의 한국 여행지 랜덤 선택 웹 애플리케이션입니다.
 
@@ -46,7 +46,7 @@ flutter run -d chrome
 
 ## 📱 데모
 
-[여기에서 실제 앱을 체험해보세요!](https://username.github.io/korea_random_trip/)
+[여기에서 실제 앱을 체험해보세요!](https://ninanoV.github.io/korea_random_trip/)
 
 ## 📄 라이선스
 
