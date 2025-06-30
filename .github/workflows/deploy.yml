@@ -17,17 +17,25 @@ jobs:
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.24.5'
+        flutter-version: 'latest'
         channel: 'stable'
+        cache: true
+        
+    - name: Enable web support
+      run: flutter config --enable-web
         
     - name: Get dependencies
       run: flutter pub get
       
+    - name: Analyze code
+      run: flutter analyze
+      
     - name: Build web
-      run: flutter build web --base-href="/korea_random_trip/"
+      run: flutter build web --base-href="/korea_random_trip/" --web-renderer html --release
       
     - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
+      uses: peaceiris/actions-gh-pages@v4
+      if: github.ref == 'refs/heads/main'
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./build/web
