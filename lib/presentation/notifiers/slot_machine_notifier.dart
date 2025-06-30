@@ -75,6 +75,9 @@ class SlotMachineState {
       error: clearError ? null : (error ?? this.error),
     );
   }
+
+  // 전체 스핀 상태 확인
+  bool get isAnySpinning => isSpinning1 || isSpinning2 || isSpinning3;
 }
 
 class SlotMachineNotifier extends ChangeNotifier {
@@ -85,6 +88,9 @@ class SlotMachineNotifier extends ChangeNotifier {
 
   SlotMachineState _state = const SlotMachineState();
   SlotMachineState get state => _state;
+
+  // 스핀 취소를 위한 플래그
+  bool _shouldCancelSpin = false;
 
   void _updateState(SlotMachineState newState) {
     _state = newState;
@@ -125,6 +131,7 @@ class SlotMachineNotifier extends ChangeNotifier {
   Future<void> _spinSlot1() async {
     if (_state.isSpinning1 || _state.isStep1Completed) return;
 
+    _shouldCancelSpin = false;
     _updateState(_state.copyWith(
       isSpinning1: true,
       clearSelectedProvince: true,
@@ -135,8 +142,11 @@ class SlotMachineNotifier extends ChangeNotifier {
       currentStep: SlotMachineStep.step1,
     ));
 
-    // 애니메이션 시간 시뮬레이션
+    // 애니메이션 시간 시뮬레이션 (취소 확인)
     await Future.delayed(const Duration(milliseconds: 2000));
+
+    // 스핀이 취소되었으면 중단
+    if (_shouldCancelSpin) return;
 
     final randomProvince = _selectRandomDivision(_state.koreaDivisions);
 
@@ -150,6 +160,7 @@ class SlotMachineNotifier extends ChangeNotifier {
   Future<void> _spinSlot2() async {
     if (_state.isSpinning2 || _state.isStep2Completed || _state.selectedProvince == null) return;
 
+    _shouldCancelSpin = false;
     _updateState(_state.copyWith(
       isSpinning2: true,
       clearSelectedCity: true,
@@ -159,6 +170,9 @@ class SlotMachineNotifier extends ChangeNotifier {
     ));
 
     await Future.delayed(const Duration(milliseconds: 2500));
+
+    // 스핀이 취소되었으면 중단
+    if (_shouldCancelSpin) return;
 
     if (_state.selectedProvince!.children.isNotEmpty) {
       final randomCity = _selectRandomDivision(_state.selectedProvince!.children);
@@ -173,12 +187,16 @@ class SlotMachineNotifier extends ChangeNotifier {
   Future<void> _spinSlot3() async {
     if (_state.isSpinning3 || _state.isStep3Completed || _state.selectedCity == null) return;
 
+    _shouldCancelSpin = false;
     _updateState(_state.copyWith(
       isSpinning3: true,
       currentStep: SlotMachineStep.step3,
     ));
 
     await Future.delayed(const Duration(milliseconds: 3000));
+
+    // 스핀이 취소되었으면 중단
+    if (_shouldCancelSpin) return;
 
     if (_state.selectedCity!.children.isNotEmpty) {
       final randomDistrict = _selectRandomDivision(_state.selectedCity!.children);
@@ -193,10 +211,17 @@ class SlotMachineNotifier extends ChangeNotifier {
   }
 
   void resetAll() {
-    _updateState(const SlotMachineState(
-      koreaDivisions: [],
-    ).copyWith(koreaDivisions: _state.koreaDivisions));
+    // 진행 중인 스핀 취소
+    _shouldCancelSpin = true;
+    
+    // 상태 초기화
+    _updateState(const SlotMachineState().copyWith(
+      koreaDivisions: _state.koreaDivisions,
+    ));
   }
+
+  // 리셋 가능 여부 확인 (UI에서 사용)
+  bool get canReset => !_state.isLoading;
 
   void closeResultPopup() {
     _updateState(_state.copyWith(showResultPopup: false));

@@ -319,19 +319,30 @@ class _TravelSlotMachinePageState extends State<TravelSlotMachinePage>
   }
 
   Widget _buildResetButton() {
-    return ElevatedButton.icon(
-      onPressed: widget.notifier.resetAll,
-      icon: const Icon(Icons.refresh, color: Colors.white),
-      label: const Text(
-        '다시 선택하기',
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-      ),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.red.shade400,
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-        elevation: 5,
-      ),
+    return AnimatedBuilder(
+      animation: widget.notifier,
+      builder: (context, child) {
+        final canReset = widget.notifier.canReset;
+        final isAnySpinning = widget.notifier.state.isAnySpinning;
+        
+        return ElevatedButton.icon(
+          onPressed: canReset ? widget.notifier.resetAll : null,
+          icon: Icon(
+            isAnySpinning ? Icons.stop : Icons.refresh,
+            color: Colors.white,
+          ),
+          label: Text(
+            isAnySpinning ? '스핀 중지' : '다시 선택하기',
+            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: isAnySpinning ? Colors.orange.shade600 : Colors.red.shade400,
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+            elevation: canReset ? 5 : 0,
+          ),
+        );
+      },
     );
   }
 }
