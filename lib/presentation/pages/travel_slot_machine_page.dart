@@ -34,7 +34,7 @@ class _TravelSlotMachinePageState extends State<TravelSlotMachinePage> with Tick
     super.initState();
     _initializeAnimations();
     widget.notifier.addListener(_onStateChanged);
-    widget.notifier.loadKoreaDivisions();
+    // 지연 로딩: 데이터를 바로 로딩하지 않고 UI가 준비된 후 로딩
   }
 
   void _initializeAnimations() {
@@ -52,9 +52,10 @@ class _TravelSlotMachinePageState extends State<TravelSlotMachinePage> with Tick
       vsync: this,
     );
     _backgroundController = AnimationController(
-      duration: const Duration(seconds: 1),
+      duration: const Duration(seconds: 2), // 더 느리게 해서 CPU 사용량 절약
       vsync: this,
-    )..repeat(reverse: true);
+    );
+    // 초기 상태에서는 배경 애니메이션을 시작하지 않음 (성능 최적화)
 
     // 애니메이션 설정
     _slotAnimation1 = Tween<double>(begin: 0, end: 1).animate(
@@ -73,6 +74,11 @@ class _TravelSlotMachinePageState extends State<TravelSlotMachinePage> with Tick
 
   void _onStateChanged() {
     final state = widget.notifier.state;
+
+    // 데이터 로딩이 완료되면 배경 애니메이션 시작
+    if (state.koreaDivisions.isNotEmpty && !_backgroundController.isAnimating) {
+      _backgroundController.repeat(reverse: true);
+    }
 
     // 애니메이션 트리거
     if (state.isSpinning1) {
@@ -105,24 +111,87 @@ class _TravelSlotMachinePageState extends State<TravelSlotMachinePage> with Tick
           final state = widget.notifier.state;
 
           if (state.isLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.teal.shade400, Colors.teal.shade600],
+                ),
+              ),
+              child: const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      '🎰 한국 랜덤 여행지 🎰',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      '여행지 데이터를 로딩 중...',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             );
           }
 
           if (state.error != null) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('오류 발생: ${state.error}'),
-                  ElevatedButton(
-                    onPressed: widget.notifier.loadKoreaDivisions,
-                    child: const Text('다시 시도'),
-                  ),
-                ],
+            return Container(
+              color: Colors.red.shade50,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error_outline, size: 64, color: Colors.red.shade600),
+                    const SizedBox(height: 20),
+                    Text(
+                      '오류 발생',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red.shade700,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      state.error!,
+                      style: const TextStyle(fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton.icon(
+                      onPressed: widget.notifier.loadKoreaDivisions,
+                      icon: const Icon(Icons.refresh),
+                      label: const Text('다시 시도'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red.shade600,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
+          }
+
+          // 데이터가 로딩되지 않은 초기 상태 - 빠른 UI 표시
+          if (state.koreaDivisions.isEmpty && !state.isLoading) {
+            return _buildInitialScreen();
           }
 
           return Stack(
@@ -343,6 +412,82 @@ class _TravelSlotMachinePageState extends State<TravelSlotMachinePage> with Tick
           ),
         );
       },
+    );
+  }
+
+  // 빠른 초기 화면 - 데이터 로딩 전
+  Widget _buildInitialScreen() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.teal.shade300,
+            Colors.blue.shade400,
+            Colors.purple.shade300,
+          ],
+        ),
+      ),
+      child: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                '🎰',
+                style: TextStyle(fontSize: 120),
+              ),
+              const SizedBox(height: 30),
+              const Text(
+                '한국 랜덤 여행지',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(
+                      offset: Offset(2, 2),
+                      blurRadius: 4,
+                      color: Colors.black26,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                '슬롯머신으로 여행지를 정해보세요!',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white70,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 50),
+              ElevatedButton.icon(
+                onPressed: () {
+                  // 사용자가 시작 버튼을 눌렀을 때만 데이터 로딩
+                  widget.notifier.loadKoreaDivisions();
+                },
+                icon: const Icon(Icons.play_arrow, size: 28),
+                label: const Text(
+                  '여행지 탐험 시작!',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.teal.shade700,
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  elevation: 8,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

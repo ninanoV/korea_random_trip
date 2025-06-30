@@ -21,31 +21,6 @@
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="한국 랜덤 여행지 - 슬롯머신으로 여행지를 정해보세요!">
 
-  <!-- 폰트 프리로드 및 최적화 -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <!-- Google Fonts CSS 직접 로드로 올바른 URL 보장 -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- 중요한 한글 폰트들을 미리 로드 -->
-  <link rel="preload"
-    href="https://fonts.gstatic.com/s/notosanskr/v36/PbyxFmXiEBPT4ITbgNA5Cgms3VYcOA-vvnqRXjSb0Eg.woff2" as="font"
-    type="font/woff2" crossorigin>
-
-  <style>
-    /* 추가 폰트 최적화 - swap으로 변경하여 폴백 폰트 먼저 표시 */
-    @font-face {
-      font-family: 'Noto Sans KR';
-      font-style: normal;
-      font-weight: 400;
-      font-display: swap;
-      /* 폴백 폰트 먼저 표시 후 로딩 완료되면 교체 */
-      src: url(https://fonts.gstatic.com/s/notosanskr/v36/PbyxFmXiEBPT4ITbgNA5Cgms3VYcOA-vvnqRXjSb0Eg.woff2) format('woff2');
-      unicode-range: U+AC00-D7A3, U+1100-11FF, U+3130-318F, U+A960-A97F, U+D7B0-D7FF;
-    }
-  </style>
-
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -59,25 +34,14 @@
   <link rel="manifest" href="manifest.json">
 
   <style>
-    /* 폰트 로딩 중 폴백 폰트 사용 - 더 부드러운 전환 */
+    /* 기본 스타일 */
     body {
-      font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', 'Apple SD Gothic Neo', 'Apple Gothic', 'Dotum', '돋움', 'Helvetica Neue', Helvetica, Arial, sans-serif;
       margin: 0;
       padding: 0;
       background-color: #26A69A;
-      /* 한글 텍스트 렌더링 최적화 */
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      text-rendering: optimizeLegibility;
-      /* visibility hidden 제거 - 폴백 폰트로 먼저 표시 */
     }
 
-    /* 한글 텍스트 요소들의 기본 스타일 */
-    * {
-      font-family: inherit;
-    }
-
-    /* 로딩 스피너는 항상 표시 */
+    /* 로딩 스피너 */
     .loading-container {
       position: fixed;
       top: 0;
@@ -90,7 +54,6 @@
       justify-content: center;
       align-items: center;
       z-index: 9999;
-      visibility: visible !important;
     }
 
     .loading-text {
@@ -99,7 +62,6 @@
       font-weight: 600;
       margin-bottom: 20px;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-      /* 로딩 텍스트는 시스템 폰트 사용 */
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
@@ -139,47 +101,7 @@
   <script src="flutter_bootstrap.js" async></script>
 
   <script>
-    let fontsLoaded = false;
-    let flutterLoaded = false;
     let loadingRemoved = false;
-
-    // 폰트 로딩 상태 확인을 간소화
-    function markFontsAsLoaded() {
-      if (!fontsLoaded) {
-        console.log('Fonts marked as loaded');
-        fontsLoaded = true;
-        checkAndHideLoading();
-      }
-    }
-
-    // Flutter 로딩 상태 확인
-    function markFlutterAsLoaded() {
-      if (!flutterLoaded) {
-        console.log('Flutter marked as loaded');
-        flutterLoaded = true;
-        checkAndHideLoading();
-      }
-    }
-
-    // 여러 방법으로 Flutter 로딩 감지
-    window.addEventListener('flutter-first-frame', markFlutterAsLoaded);
-    window.addEventListener('flutter-initialized', markFlutterAsLoaded);
-
-    // 폰트 로딩 확인
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(markFontsAsLoaded);
-    } else {
-      markFontsAsLoaded();
-    }
-
-    // 로딩 화면 제거 함수
-    function checkAndHideLoading() {
-      console.log('checkAndHideLoading called - fonts:', fontsLoaded, 'flutter:', flutterLoaded, 'removed:', loadingRemoved);
-
-      if ((fontsLoaded && flutterLoaded) && !loadingRemoved) {
-        hideLoadingScreen('Both loaded');
-      }
-    }
 
     function hideLoadingScreen(reason) {
       const loading = document.getElementById('loading');
@@ -196,31 +118,58 @@
       }
     }
 
-    // 적극적인 폴백 전략
-    // 1초 후 폰트 강제 완료
-    setTimeout(markFontsAsLoaded, 1000);
+    // Flutter 컨텐츠가 실제로 렌더링되었는지 확인
+    function checkFlutterContentReady() {
+      // Flutter DOM 요소들 확인
+      const flutterElements = document.querySelectorAll('flt-scene-host, flutter-view, [flt-renderer], flt-glass-pane');
 
-    // 2초 후 Flutter 강제 완료
-    setTimeout(markFlutterAsLoaded, 2000);
+      for (let element of flutterElements) {
+        const rect = element.getBoundingClientRect();
+        // 실제 크기가 있고 보이는 상태인지 확인
+        if (rect.width > 100 && rect.height > 100) {
+          console.log('Flutter content ready - element size:', rect.width, 'x', rect.height);
+          return true;
+        }
+      }
 
-    // 3초 후 무조건 로딩 화면 제거
+      // body의 배경색이 변경되었는지도 확인 (Flutter 앱이 로드되면 배경색이 바뀜)
+      const bodyBg = window.getComputedStyle(document.body).backgroundColor;
+      if (bodyBg !== 'rgb(38, 166, 154)') { // 초기 teal 색상이 아닌 경우
+        console.log('Body background changed, Flutter app likely loaded');
+        return true;
+      }
+
+      return false;
+    }
+
+    // Flutter 첫 프레임 이벤트 리스너 (한 번만 등록)
+    window.addEventListener('flutter-first-frame', () => {
+      console.log('Flutter first frame detected');
+
+      // 더 빠른 제거를 위해 체크 간격과 대기 시간 단축
+      let checkCount = 0;
+      const maxChecks = 8; // 0.8초 (100ms * 8)
+
+      const contentCheck = setInterval(() => {
+        checkCount++;
+
+        if (checkFlutterContentReady() || checkCount >= maxChecks) {
+          clearInterval(contentCheck);
+          // 대기 시간을 150ms로 단축
+          setTimeout(() => {
+            hideLoadingScreen(checkFlutterContentReady() ? 'Flutter content ready' : 'Content check timeout');
+          }, 150);
+        }
+      }, 100);
+    });
+
+    // 폴백 타임아웃을 3초로 단축
     setTimeout(() => {
       if (!loadingRemoved) {
-        hideLoadingScreen('3s timeout');
+        console.log('Fallback timeout: removing loading screen after 3s');
+        hideLoadingScreen('3s fallback timeout');
       }
     }, 3000);
-
-    // DOM 로딩 완료 시에도 시도
-    document.addEventListener('DOMContentLoaded', function () {
-      console.log('DOMContentLoaded fired');
-      setTimeout(markFlutterAsLoaded, 100);
-    });
-
-    // 페이지 로드 완료 시에도 시도
-    window.addEventListener('load', function () {
-      console.log('Window load event fired');
-      setTimeout(markFlutterAsLoaded, 100);
-    });
   </script>
 </body>
 

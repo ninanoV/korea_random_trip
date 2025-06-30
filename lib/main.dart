@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'core/dependency_injection.dart';
 import 'presentation/pages/travel_slot_machine_page.dart';
@@ -17,8 +18,14 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
@@ -30,56 +37,8 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.light,
         ),
         useMaterial3: true,
-        fontFamily: 'Noto Sans KR',
-        fontFamilyFallback: const [
-          'Malgun Gothic',
-          '맑은 고딕',
-          'Apple SD Gothic Neo',
-          'Apple Gothic',
-          'Dotum',
-          '돋움',
-          'Helvetica Neue',
-          'Helvetica',
-          'Arial',
-          'sans-serif'
-        ],
-        textTheme: const TextTheme(
-          headlineLarge: TextStyle(
-            fontFamily: 'Noto Sans KR',
-            fontFamilyFallback: ['Malgun Gothic', '맑은 고딕', 'Arial'],
-          ),
-          headlineMedium: TextStyle(
-            fontFamily: 'Noto Sans KR',
-            fontFamilyFallback: ['Malgun Gothic', '맑은 고딕', 'Arial'],
-          ),
-          headlineSmall: TextStyle(
-            fontFamily: 'Noto Sans KR',
-            fontFamilyFallback: ['Malgun Gothic', '맑은 고딕', 'Arial'],
-          ),
-          titleLarge: TextStyle(
-            fontFamily: 'Noto Sans KR',
-            fontFamilyFallback: ['Malgun Gothic', '맑은 고딕', 'Arial'],
-          ),
-          titleMedium: TextStyle(
-            fontFamily: 'Noto Sans KR',
-            fontFamilyFallback: ['Malgun Gothic', '맑은 고딕', 'Arial'],
-          ),
-          titleSmall: TextStyle(
-            fontFamily: 'Noto Sans KR',
-            fontFamilyFallback: ['Malgun Gothic', '맑은 고딕', 'Arial'],
-          ),
-          bodyLarge: TextStyle(
-            fontFamily: 'Noto Sans KR',
-            fontFamilyFallback: ['Malgun Gothic', '맑은 고딕', 'Arial'],
-          ),
-          bodyMedium: TextStyle(
-            fontFamily: 'Noto Sans KR',
-            fontFamilyFallback: ['Malgun Gothic', '맑은 고딕', 'Arial'],
-          ),
-          bodySmall: TextStyle(
-            fontFamily: 'Noto Sans KR',
-            fontFamilyFallback: ['Malgun Gothic', '맑은 고딕', 'Arial'],
-          ),
+        textTheme: GoogleFonts.notoSansKrTextTheme(
+          Theme.of(context).textTheme,
         ),
       ),
       home: TravelSlotMachinePage(

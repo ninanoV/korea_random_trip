@@ -12,8 +12,8 @@ class DependencyInjection {
   static late SlotMachineNotifier _slotMachineNotifier;
 
   static void setup() {
-    // Data Layer
-    final divisionDataSource = DivisionDataSourceImpl();
+    // Data Layer - 최적화된 데이터 소스 사용
+    final DivisionDataSource divisionDataSource = DivisionDataSourceImpl();
     _divisionRepository = DivisionRepositoryImpl(divisionDataSource);
 
     // Domain Layer
